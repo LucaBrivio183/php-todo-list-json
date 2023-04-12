@@ -1,11 +1,19 @@
 <?php
 
-$todolist = file_get_contents(__DIR__ . '/todolist.json');
+$todo_list = file_get_contents(__DIR__ . '/todolist.json');
+$new_todo = isset($_POST['newTodo']) ? $_POST['newTodo'] : NULL;
 
-$todolist = json_decode($todolist, true);
+if ($new_todo !== NULL) {
+    $todo_list = json_decode($todo_list, true);
+    $todo_list[] = [
+        "text" => $new_todo,
+        "done" => false
+    ];
+    $todo_list = json_encode($todo_list);
+    file_put_contents(__DIR__ . '/todolist.json', $todo_list);
+}
 
-$todolist = json_encode($todolist);
 
 header('Content-Type: application/json');
 
-echo $todolist;
+echo $todo_list;
